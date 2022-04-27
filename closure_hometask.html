@@ -31,29 +31,22 @@
       render(data);
 
 
-      function delayLiveSearch(fn, delay) {
-        let timer = null;
-        return function () {
-          let context = this, args = arguments;
-          clearTimeout(timer);
-          timer = setTimeout(function () {
-            fn.apply(context, args);
-          }, delay);
-        };
-        //your closure code here
+      function delayLiveSearch() {
+          let searchtimer;
+          return function(e) {
+              clearTimeout(searchtimer);
+              searchtimer = setTimeout(() => {
+                  handleLiveSearch(e);
+              }, 500);
+          };
       }
 
       /********** Live Search *********/
 
-      document.getElementById("liveSearchName").addEventListener('input', function(e) {
-          //TODO: use delayLiveSearch to delay backend call
-          delayLiveSearch(handleLiveSearch.bind(null, e), 500);
-        });
 
-      document.getElementById("liveSearchSurname").addEventListener('input', function(e) {
-          //TODO: use delayLiveSearch to delay backend call
-          handleLiveSearch(e);
-        });
+      document.getElementById("liveSearchName").addEventListener('input',  delayLiveSearch());
+
+      document.getElementById("liveSearchSurname").addEventListener('input', delayLiveSearch());
 
       /********** Live Search *********/
 
